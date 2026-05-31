@@ -27,13 +27,24 @@ Frontend ──REST/SSE──► ЦЕЙ BACKEND ──REST+Basic──► 1С: H
 
 ## Швидкий старт (mock-режим, без 1С і без ключів LLM)
 
+Найпростіше — bootstrap-скрипт (створює `.venv`, ставить залежності, копіює `.env`):
+
+```powershell
+cd backend
+.\setup.ps1                          # Windows; Linux/macOS: ./setup.sh
+.\.venv\Scripts\Activate.ps1         # Linux/macOS: source .venv/bin/activate
+uvicorn app.main:app --reload        # Swagger: http://localhost:8000/docs
+pytest                               # smoke-тести проганяють tool-loop у mock
+```
+
+Або вручну:
+
 ```bash
 cd backend
 python -m venv .venv && .venv\Scripts\activate   # Linux/macOS: source .venv/bin/activate
 pip install -e ".[dev]"
 copy .env.example .env
-uvicorn app.main:app --reload                     # Swagger: http://localhost:8000/docs
-pytest                                            # smoke-тести проганяють tool-loop у mock
+uvicorn app.main:app --reload
 ```
 
 Веб-інтерфейс: `http://localhost:8000/` (редірект на `/ui/`).
