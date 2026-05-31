@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+
+# Секрети / локальне
+.env
+.env.*
+!.env.example
+
+# Тимчасові артефакти
+tmp/
+
+# Локальні налаштування Claude Code
+.claude/
+
+# Вивантаження конфігурації 1С (IP вендора MCBP.PLUS) — не публікуємо
+bas/
+
+# ОС / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

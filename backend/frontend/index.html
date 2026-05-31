@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MCBP AI</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="dot" id="health-dot" title="стан backend"></span>
+        <span class="title">MCBP&nbsp;AI</span>
+      </div>
+      <div class="meta" id="health-meta">перевірка…</div>
+    </header>
+
+    <main class="chat" id="chat">
+      <div class="empty" id="empty-state">
+        <h1>Запитайте про дані 1С</h1>
+        <p>Модель сама вирішує, які дані тягнути через інструменти MCBP_AI.</p>
+        <div class="suggestions">
+          <button class="chip" data-q="Знайди контрагента Фурнітура і покажи його основні дані">Знайти контрагента</button>
+          <button class="chip" data-q="Покажи замовлення покупця за травень 2026">Замовлення за травень</button>
+          <button class="chip" data-q="Які довідники доступні і скільки в них записів?">Огляд довідників</button>
+        </div>
+      </div>
+    </main>
+
+    <form class="composer" id="composer" autocomplete="off">
+      <textarea id="input" rows="1" placeholder="Напишіть запит… (Enter — надіслати, Shift+Enter — новий рядок)"></textarea>
+      <button type="submit" id="send" title="Надіслати">➤</button>
+    </form>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
