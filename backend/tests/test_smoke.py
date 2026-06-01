@@ -5,6 +5,7 @@ from fastapi.testclient import TestClient
 from app.clients.mcbp import _classify_legacy_error
 from app.core.errors import KeyMismatchError, ParameterError, PlusRequiredError
 from app.main import app
+from app.services.ai_orchestrator import SYSTEM_PROMPT
 
 
 def test_health():
@@ -43,3 +44,10 @@ def test_legacy_error_classification():
     assert isinstance(_classify_legacy_error("Key not found!"), KeyMismatchError)
     assert isinstance(_classify_legacy_error("MCBP Plus not found!"), PlusRequiredError)
     assert isinstance(_classify_legacy_error("Parameter type not found!"), ParameterError)
+
+
+def test_system_prompt_uses_russian_metadata_names():
+    # Системний промпт — єдине, що скеровує модель на коректні (російські) імена типів 1С.
+    assert "Контрагенты" in SYSTEM_PROMPT
+    assert "ЗаказПокупателя" in SYSTEM_PROMPT
+    assert "РОСІЙСЬКОМОВНІ" in SYSTEM_PROMPT
