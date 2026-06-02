@@ -1,19 +1,20 @@
 # mcbp-ai
 
-ШІ-бекенд для керованої моделлю роботи з даними **MCBP+** (1С:Підприємство 8)
-через HTTP-сервіс `MCBP_AI` (`/ai/v1/...`).
+ШІ-бекенд для керованої моделлю роботи з даними **MCBP+** на платформі **BAS**
+([bas-soft.eu](https://www.bas-soft.eu/) — напр. BAS Малий бізнес, BAS Бухгалтерія,
+BAS Управління торгівлею) через HTTP-сервіс `MCBP_AI` (`/ai/v1/...`).
 
 ## Архітектура
 
 ```
-Frontend ──REST/SSE──► ЦЕЙ BACKEND ──REST+Basic──► 1С: HTTPService.MCBP_AI
+Frontend ──REST/SSE──► ЦЕЙ BACKEND ──REST+Basic──► BAS: HTTPService.MCBP_AI
                        • LLM tool-loop              • контракт /ai/v1
                        • нормалізація помилок        • пагінація, HTTP-коди
 ```
 
 **Потоками даних керує модель.** На запит користувача LLM сама обирає інструменти
 (`search_catalog`, `get_documents`, `get_schema`, `get_register_balance`), backend
-виконує їх проти 1С і повертає результат моделі — до фінальної відповіді.
+виконує їх проти BAS і повертає результат моделі — до фінальної відповіді.
 
 Дві абстракції, обидві перемикаються через `.env`:
 - `MCBPClient` (`app/clients/mcbp.py`) — http + вбудований **mock** (`MCBP_ONEC_MOCK=true`);
@@ -25,7 +26,7 @@ Frontend ──REST/SSE──► ЦЕЙ BACKEND ──REST+Basic──► 1С: H
   Деталі та запуск — у [`backend/README.md`](backend/README.md).
 - **`ANALYSIS_REPORT.md`** — аналіз конфігурації MCBP+ та API-довідник інтеграції.
 
-## Швидкий старт (mock-режим, без 1С і без ключів LLM)
+## Швидкий старт (mock-режим, без BAS і без ключів LLM)
 
 Найпростіше — bootstrap-скрипт (створює `.venv`, ставить залежності, копіює `.env`):
 

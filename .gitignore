@@ -19,6 +19,10 @@ dist/
 # Тимчасові артефакти
 tmp/
 
+# Логи backend
+logs/
+backend/logs/
+
 # Локальні налаштування Claude Code
 .claude/
 

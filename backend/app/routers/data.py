@@ -19,8 +19,9 @@ async def list_catalog(
     q: str | None = Query(None),
     cursor: str | None = Query(None),
     limit: int = Query(50, ge=1, le=1000),
+    fields: str | None = Query(None),
 ) -> dict:
-    return await get_mcbp().list_catalog(type_, cursor, limit, q)
+    return await get_mcbp().list_catalog(type_, cursor, limit, q, fields)
 
 
 @router.get("/v1/documents/{type_}/schema")
@@ -31,12 +32,17 @@ async def document_schema(type_: str) -> dict:
 @router.get("/v1/documents/{type_}")
 async def list_documents(
     type_: str,
+    request: Request,
     from_: str | None = Query(None, alias="from"),
     to: str | None = Query(None),
     cursor: str | None = Query(None),
     limit: int = Query(100, ge=1, le=1000),
+    fields: str | None = Query(None),
 ) -> dict:
-    return await get_mcbp().list_documents(type_, from_, to, cursor, limit)
+    # Field filters arrive as f.<field>=<value> (e.g. f.Контрагент=<uuid>), mirroring MCBP_AI.
+    filters = {k[2:]: v for k, v in request.query_params.items()
+               if k.startswith("f.") and len(k) > 2}
+    return await get_mcbp().list_documents(type_, from_, to, cursor, limit, filters, fields)
 
 
 @router.post("/v1/objects/{type_}")

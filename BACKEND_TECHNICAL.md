@@ -215,6 +215,17 @@ backend/
 | `get_documents` | `type` | `from`, `to` (YYYY-MM-DD), `limit`(100), `cursor` | `list_documents` |
 | `get_schema` | `type` | — | `document_schema` |
 | `get_register_balance` | `type` | `counterparty` (ref) | `register_balance` |
+| `list_metadata` | `metadata` (`all` або вид) | — | `list_metadata` |
+| `describe_metadata` | `metadata`, `type` | — | `describe_metadata` |
+| `filter_catalog` | `type` | `filters{поле:значення}`, `orderby`, `desc`, `exclude_groups`, `limit` | `filter_catalog` |
+
+`filter_catalog` — **універсальний серверний фільтр** за будь-якими полями (рівність; рядок з `%` → LIKE)
++ сортування + виключення груп. Імена полів — реальні (з `describe_metadata`, російські
+ідентифікатори); валідація і типізація на боці 1С (анти-інʼєкція; посилання → 422).
+
+Останні два — **інтроспекція структури конфігурації** (через `/ai/v1/metadata`): модель
+спершу дізнаєтся реальні види/об'єкти/поля, а не вгадує їх. Працює для будь-якої
+конфігурації (читання суто через `Metadata.*`).
 
 `tool_defs(allowed)` віддає або всі описи, або лише дозволений підмножину (на
 запит можна обмежити перелік інструментів через `allowed_tools`).

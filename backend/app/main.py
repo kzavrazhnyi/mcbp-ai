@@ -8,6 +8,7 @@ Mount layout (everything under /ai to mirror the 1C service namespace):
 from __future__ import annotations
 
 import logging
+import time
 from contextlib import asynccontextmanager
 
 from pathlib import Path
@@ -20,12 +21,16 @@ from fastapi.staticfiles import StaticFiles
 from app.core.config import get_settings
 from app.core.deps import container
 from app.core.errors import MCBPError
+from app.core.logging_setup import setup_logging
 from app.routers import ai, data, system
 
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
 
 settings = get_settings()
-logging.basicConfig(level=settings.log_level)
+LOG_FILE = setup_logging(settings)
+logging.getLogger("mcbp.http").info("Логи пишуться у %s", LOG_FILE)
+
+http_log = logging.getLogger("mcbp.http")
 
 
 @asynccontextmanager
@@ -43,6 +48,18 @@ app.add_middleware(
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Authorization", "Content-Type"],
 )
+
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    # Логуємо кожен вхідний запит (крім статики /ui) — метод, шлях, статус, час.
+    start = time.monotonic()
+    response = await call_next(request)
+    if not request.url.path.startswith("/ui"):
+        elapsed_ms = (time.monotonic() - start) * 1000
+        http_log.info("%s %s → %s (%.0f ms)",
+                      request.method, request.url.path, response.status_code, elapsed_ms)
+    return response
 
 
 @app.exception_handler(MCBPError)

@@ -20,7 +20,7 @@ async function checkHealth() {
     const j = await r.json();
     const d = j.data || {};
     const up = d.upstream || {};
-    const onec = d.mock_1c ? "mock" : (up.status === "ok" ? "1С ✓" : "1С ✗");
+    const onec = d.mock_1c ? "mock" : (up.status === "ok" ? "BAS ✓" : "BAS ✗");
     healthDot.classList.toggle("ok", r.ok);
     healthDot.classList.toggle("err", !r.ok);
     healthMeta.textContent = `LLM: ${d.llm_provider} · ${onec}`;
