@@ -1,36 +1,46 @@
-# Python
-__pycache__/
-*.py[cod]
-.venv/
-venv/
-env/
-*.egg-info/
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-build/
-dist/
+# Claude local settings (never commit)
+.claude/settings.local.json
+.claude_dev/settings.local.json
 
-# Секрети / локальне
+# Python
+backend/.venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+*.so
+
+# Secrets
 .env
 .env.*
-!.env.example
+*.key
+*.pem
+*.crt
+*.p12
+credentials*
 
-# Тимчасові артефакти
-tmp/
-
-# Логи backend
+# Logs & temp
+*.log
 logs/
-backend/logs/
+tmp/
+.scripts/
 
-# Локальні налаштування Claude Code
-.claude/
-
-# Вивантаження конфігурації 1С (IP вендора MCBP.PLUS) — не публікуємо
+# BAS vendor — 1C IP
 bas/
 
-# ОС / IDE
-.DS_Store
-Thumbs.db
+# IDE / OS
 .idea/
 .vscode/
+.DS_Store
+Thumbs.db
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Ruff
+.ruff_cache/

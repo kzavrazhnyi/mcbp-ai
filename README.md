@@ -25,6 +25,8 @@ Frontend ──REST/SSE──► ЦЕЙ BACKEND ──REST+Basic──► BAS: H
 - **`backend/`** — FastAPI-бекенд (код, тести, веб-інтерфейс `frontend/`).
   Деталі та запуск — у [`backend/README.md`](backend/README.md).
 - **`ANALYSIS_REPORT.md`** — аналіз конфігурації MCBP+ та API-довідник інтеграції.
+- **`.claude/`** + **`CLAUDE.md`** + **`LIMITS.md`** — конфігурація Claude Code для цього проєкту
+  (агенти, правила, скіли, MCP). Опис — у розділі [Claude Code конфігурація](#claude-code-конфігурація).
 
 ## Швидкий старт (mock-режим, без BAS і без ключів LLM)
 
@@ -54,3 +56,68 @@ uvicorn app.main:app --reload
 
 Усі секрети — через змінні оточення (`backend/.env`, шаблон у `backend/.env.example`).
 Файл `.env` навмисно не входить до репозиторію.
+
+---
+
+## Claude Code конфігурація
+
+Проєкт укомплектовано конфігом Claude Code (тариф **pro-20**, solo-розробник, платформа
+**Windows**). Усі агенти працюють на `sonnet` — деталі бюджету у `LIMITS.md`.
+
+### Що входить
+
+| Категорія | Кількість |
+|---|---|
+| Агенти | 5 |
+| Правила (`rules/`) | 8 |
+| Скіли | 15 (6 community + 6 universal-core + 3 custom-gap) |
+| MCP-сервери | 1 (`context7`) |
+
+**Агенти:** `developer`, `api-client-engineer`, `claude-integration-specialist`, `debugger`, `reviewer`.
+
+**Кастомні скіли під проєкт:** `mcbp-onec-integration` (контракт 1С/BAS MCBP+ по HTTP),
+`model-tool-orchestration-loop` (цикл «питання → LLM → tool-call → BAS → відповідь»),
+`claude-api-tool-use` (Anthropic SDK: tool-use, стрімінг, prompt caching).
+
+> 6 community-скілів (`fastapi`, `fastapi-patterns`, `fastapi-python`, `python-testing-patterns`,
+> `pytest-coverage`, `ruff-recursive-fix`) поставляються **вбудовано** в `.claude/skills/` —
+> `npx skills add` не потрібен.
+
+### Хто за що відповідає
+
+| Кажеш... | Диспатчиться до |
+|---|---|
+| «додай ендпоінт», «полагодь роутер» | `developer` |
+| «mcbp клієнт», «реєстр інструментів», «search_catalog» | `api-client-engineer` |
+| «tool-use loop», «SSE», «anthropic», «ai_orchestrator» | `claude-integration-specialist` |
+| «баг», «падає», «не працює», «тест червоний» | `debugger` |
+| «рев'ю», «аудит», «перед пушем» | `reviewer` |
+
+Оркестратор диспатчить по одному агенту на задачу. Максимум 2 агенти паралельно;
+`reviewer` завжди серійно (read-only, без Edit/Write).
+
+### Передумови
+
+1. **Python 3.11+** (Windows).
+2. **Node.js** (для `npx` — MCP-сервер `context7`).
+3. **context7 API-ключ** — отримати на https://context7.com/dashboard.
+4. **Секрети проєкту** — у `backend/.env` (див. розділ «Конфігурація» вище:
+   `ANTHROPIC_API_KEY`, опційно `OPENAI_API_KEY`, `MCBP_ONEC_URL/USER/PASSWORD`).
+
+### Налаштування Claude Code
+
+```powershell
+# 1. Ключ context7 (перезапусти Claude Code після цього)
+[Environment]::SetEnvironmentVariable("CONTEXT7_API_KEY", "ctx7sk-...", "User")
+```
+
+Конфіг уже лежить у репозиторії (`.claude/`, `CLAUDE.md`, `.mcp.json`, `LIMITS.md`).
+Відкрий Claude Code у корені проєкту — на першому запуску буде запит увімкнути MCP `context7`.
+
+### Як розширювати
+
+- **Додати інструмент:** `api-client-engineer` → `clients/mcbp.py` + `services/tools.py` +
+  схема в реєстрі інструментів.
+- **Змінити LLM-провайдера:** `settings.llm_provider` у `backend/.env`
+  (`anthropic` / `openai` / `mock`); абстракцію тримає `claude-integration-specialist`.
+- **Додати правило:** новий файл `.claude/rules/<name>.md` за зразком наявних.
