@@ -1,10 +1,12 @@
+Generator: v2.5 (2026-06-10)
+
 # LIMITS.md — Consumption Guide
 
 This config is tuned for:
 
 - **Team size:** `solo` (solo · small · large)
 - **Plan tier:** `pro-20` (pro-20 · max-100)
-- **Platform:** `windows` (macos · windows · linux) — selects the shell rule, permissions allow-list, and hook syntax
+- **Platform:** `macos` (macos · windows · linux) — selects the shell rule, permissions allow-list, and hook syntax
 - **Effective model map:**
 
 ```text
@@ -17,6 +19,28 @@ debugger: sonnet
 ```
 
 Every `model:` field in every agent in `.claude/` matches this map. **NO opus anywhere in this config.**
+
+---
+
+## Task Playbook — Worked Examples
+
+How to run the common task types on THIS config: pipeline, agents with resolved models, plan mode
+or auto, and rough limit cost (S = one short dispatch · M = 2-3 dispatches · L = full pipeline with
+quality gate). The decision table lives in `.claude/rules/pipeline-selector.md`; quality posture
+(MVP vs production) in `.claude/rules/task-quality-modes.md`.
+
+| Task | Pipeline | Agents (all sonnet on this tier) | Mode | Cost |
+|---|---|---|---|---|
+| New feature (production) | orchestrator-strict | implementer (sonnet) → gate SERIAL: reviewer (sonnet) | Plan mode ONLY if >5 files; else auto | L |
+| New feature (MVP) | mvp-fast-track | ONE implementer (sonnet) → self-review checklist (no separate reviewer dispatch) | Auto | M |
+| Bug fix | bug-fix-pipeline | debugger (sonnet) → implementer (sonnet) | Auto | M |
+| Hotfix | bug-fix-pipeline (compressed) | debugger → implementer, one track | Auto | S |
+| Refactor | refactor-pipeline | implementer (sonnet) per zone → reviewer | Plan mode for the charter | L |
+| Research / spike | direct, read-only | one explorer (sonnet) | Auto | S |
+
+**Tier rules of thumb:** plan mode buys review-ability, not extra model power (no `opusplan` here) —
+reserve it for big features and refactor charters; everything else runs auto. Quality-gate agents
+ALWAYS run serially. One pipeline at a time; `/compact` between features.
 
 ---
 

@@ -25,8 +25,7 @@ Build features end-to-end across `backend/app/routers/`, `backend/app/services/`
 
 ## Activate Skills
 
-- `fastapi` — FastAPI routers, dependency injection, lifespan, middleware
-- `fastapi-patterns` — project structure, request/response patterns, error handlers
+- `fastapi-python` — FastAPI routers, dependency injection, lifespan, middleware, project structure, request/response patterns
 - `writing-plans` — for multi-file features, write a plan before coding
 - `verification-before-completion` — run tests before reporting done
 

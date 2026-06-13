@@ -1,6 +1,6 @@
 ---
 name: model-tool-orchestration-loop
-description: "The core architecture of mcbp-ai: NL question → LLM provider → tool-call loop → execute against 1C → accumulate results → final answer. Use when working on ai_orchestrator.py, the provider Protocol, SSE fan-out, or designing the messages list format. Trigger — EN: orchestration loop, tool use loop, ai orchestrator, messages list, tool result, sse fan-out, provider protocol, loop until done. Trigger — UA: петля оркестрації, tool use петля, ai orchestrator, список повідомлень, tool result, sse фан-аут, провайдер протокол, цикл до відповіді."
+description: "mcbp-ai core: NL question → LLM → tool-call loop → 1C → final answer. Use for ai_orchestrator.py, provider Protocol, SSE fan-out, messages list format. Trigger — EN: orchestration loop, tool use loop, ai orchestrator, messages list, tool result, sse fan-out, provider protocol, loop until done. Trigger — UA: петля оркестрації, tool use петля, ai orchestrator, список повідомлень, tool result, sse фан-аут, провайдер протокол, цикл до відповіді."
 ---
 
 # Model-Driven Tool Orchestration Loop

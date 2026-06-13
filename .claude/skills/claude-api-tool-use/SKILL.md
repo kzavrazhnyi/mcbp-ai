@@ -1,6 +1,6 @@
 ---
 name: claude-api-tool-use
-description: "Anthropic SDK 0.40 streaming, tool-use loop, anthropic.messages.stream(), claude-opus-4-8 model constant, prompt-caching headers, tool_result accumulation, adaptive thinking. Use when implementing or debugging the Claude provider in backend/app/llm/claude.py. Trigger — EN: anthropic sdk, tool use, streaming, claude-opus-4-8, tool_result, prompt caching, messages.stream, anthropic api. Trigger — UA: anthropic sdk, tool use, стрімінг, claude-opus-4-8, tool_result, кешування промптів, messages.stream, anthropic апі."
+description: "Anthropic SDK 0.40: tool-use loop, messages.stream(), prompt-caching headers, tool_result accumulation, adaptive thinking. Use for backend/app/llm/claude.py. Trigger — EN: anthropic sdk, tool use, streaming, claude-opus-4-8, tool_result, prompt caching, messages.stream, anthropic api. Trigger — UA: anthropic sdk, tool use, стрімінг, claude-opus-4-8, tool_result, кешування промптів, messages.stream, anthropic апі."
 ---
 
 # Anthropic SDK 0.40 — Tool Use & Streaming
@@ -189,7 +189,7 @@ response = await client.messages.create(
 )
 ```
 
-Do NOT use `MAX_THINKING_TOKENS` env var — it is a no-op on Opus 4.7+. Use the `thinking` API parameter directly if needed.
+Control thinking via the `thinking` **API request parameter** directly — `{"type": "enabled", "budget_tokens": 5000}`. There is no working shell environment variable for this on Opus 4.7+.
 
 ## Error Handling
 
@@ -243,7 +243,7 @@ NEVER call the live Anthropic API in tests. Mock `client.messages.create` or `cl
 - Passing `content` as string instead of list of blocks to the messages list.
 - Using `content[0].text` to get the final answer — there may be multiple text blocks; join them.
 - Not serializing `tool.input` result to JSON string before putting in `tool_result.content`.
-- Using `CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING` env var — it is a no-op on Opus 4.7+.
+- Trying to disable adaptive thinking via a shell env var — use the `thinking` API request parameter instead (see Adaptive Thinking section above).
 
 ## References
 

@@ -22,9 +22,9 @@ Dispatch the `reviewer` agent to catch issues before they compound. The reviewer
 ## How to Request
 
 **1. Get git SHAs:**
-```powershell
-$BASE_SHA = git rev-parse HEAD~1   # or origin/main
-$HEAD_SHA = git rev-parse HEAD
+```bash
+BASE_SHA=$(git rev-parse HEAD~1)   # or origin/main
+HEAD_SHA=$(git rev-parse HEAD)
 ```
 
 **2. Dispatch `reviewer` agent** via `SendMessage` or `Agent` tool.

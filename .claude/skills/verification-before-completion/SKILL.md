@@ -46,7 +46,7 @@ Skip any step = lying, not verifying
 
 ## Verification Commands (mcbp-ai)
 
-```powershell
+```bash
 # Run all tests
 python -m pytest backend/tests/ -v
 

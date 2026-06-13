@@ -1,6 +1,6 @@
 ---
 name: ruff-recursive-fix
-description: "Run Ruff checks with optional scope and rule overrides, apply safe and unsafe autofixes iteratively, review each change, and resolve remaining findings with targeted edits or user decisions.\n\nУкраїнською: ruff лінтер Python, виправити помилки ruff, автофікс ruff, перевірка якості коду Python, ruff check fix, ітеративне виправлення ruff."
+description: "Iteratively run Ruff lint checks, apply safe/unsafe autofixes, review diffs, and resolve remaining findings with targeted edits. Trigger — EN: ruff, lint fix, autofix, ruff check, code quality, ruff format. Trigger — UA: ruff лінтер Python, виправити помилки ruff, автофікс ruff, перевірка якості коду Python, ruff check fix, ітеративне виправлення ruff."
 ---
 
 # Ruff Recursive Fix

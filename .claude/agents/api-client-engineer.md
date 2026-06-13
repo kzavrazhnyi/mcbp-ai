@@ -47,16 +47,8 @@ backend/tests/test_tools.py        — tool registry dispatch tests
 
 ## The 6 Data-Fetch Tools
 
-| Tool | Purpose | Endpoint (approx.) |
-|---|---|---|
-| `search_catalog` | Full-text search in 1C catalog | POST /catalog/search |
-| `get_documents` | Fetch documents by filter | POST /documents/list |
-| `get_register_balance` | Account/register balance query | POST /registers/balance |
-| `filter_catalog` | Filtered catalog query | POST /catalog/filter |
-| `list_metadata` | List available metadata objects | GET /metadata/list |
-| `describe_metadata` | Describe a specific metadata object | GET /metadata/{name} |
-
-Exact URLs, request/response shapes: `BACKEND_TECHNICAL.md` + `BAS_CODE_MAP.md`.
+Ground truth: see `.claude/refs/onec-tool-contract.md` (tool names, endpoints, auth, retry).
+Full request/response shapes: `mcbp-onec-integration` skill + `BACKEND_TECHNICAL.md`.
 
 ## Workflow
 

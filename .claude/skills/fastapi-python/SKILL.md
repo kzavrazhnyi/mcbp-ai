@@ -1,6 +1,6 @@
 ---
 name: fastapi-python
-description: "Expert in FastAPI Python development with best practices for APIs and async operations.\n\nУкраїнською: FastAPI розробка, найкращі практики API, async операції Python, функціональне програмування FastAPI, RORO патерн, обробка помилок API."
+description: "Expert FastAPI Python: async routes, Pydantic v2, dependency injection, lifespan, RORO pattern, error handling. Trigger — EN: fastapi, async api, pydantic, dependency injection, lifespan, roro pattern, fastapi routes. Trigger — UA: FastAPI розробка, найкращі практики API, async операції Python, RORO патерн, обробка помилок API."
 ---
 
 # FastAPI Python

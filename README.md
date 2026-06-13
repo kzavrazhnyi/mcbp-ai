@@ -32,10 +32,10 @@ Frontend ──REST/SSE──► ЦЕЙ BACKEND ──REST+Basic──► BAS: H
 
 Найпростіше — bootstrap-скрипт (створює `.venv`, ставить залежності, копіює `.env`):
 
-```powershell
+```bash
 cd backend
-.\setup.ps1                          # Windows; Linux/macOS: ./setup.sh
-.\.venv\Scripts\Activate.ps1         # Linux/macOS: source .venv/bin/activate
+./setup.sh                           # macOS/Linux; Windows: .\setup.ps1
+source .venv/bin/activate
 uvicorn app.main:app --reload        # Swagger: http://localhost:8000/docs
 pytest                               # smoke-тести проганяють tool-loop у mock
 ```
@@ -44,9 +44,9 @@ pytest                               # smoke-тести проганяють too
 
 ```bash
 cd backend
-python -m venv .venv && .venv\Scripts\activate   # Linux/macOS: source .venv/bin/activate
+python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
-copy .env.example .env
+cp .env.example .env
 uvicorn app.main:app --reload
 ```
 
@@ -62,15 +62,15 @@ uvicorn app.main:app --reload
 ## Claude Code конфігурація
 
 Проєкт укомплектовано конфігом Claude Code (тариф **pro-20**, solo-розробник, платформа
-**Windows**). Усі агенти працюють на `sonnet` — деталі бюджету у `LIMITS.md`.
+**macOS**). Усі агенти працюють на `sonnet` — деталі бюджету у `LIMITS.md`.
 
 ### Що входить
 
 | Категорія | Кількість |
 |---|---|
 | Агенти | 5 |
-| Правила (`rules/`) | 8 |
-| Скіли | 15 (6 community + 6 universal-core + 3 custom-gap) |
+| Правила (`rules/`) | 11 |
+| Скіли | 12 (3 community + 6 universal-core + 3 custom-gap) |
 | MCP-сервери | 1 (`context7`) |
 
 **Агенти:** `developer`, `api-client-engineer`, `claude-integration-specialist`, `debugger`, `reviewer`.
@@ -79,9 +79,8 @@ uvicorn app.main:app --reload
 `model-tool-orchestration-loop` (цикл «питання → LLM → tool-call → BAS → відповідь»),
 `claude-api-tool-use` (Anthropic SDK: tool-use, стрімінг, prompt caching).
 
-> 6 community-скілів (`fastapi`, `fastapi-patterns`, `fastapi-python`, `python-testing-patterns`,
-> `pytest-coverage`, `ruff-recursive-fix`) поставляються **вбудовано** в `.claude/skills/` —
-> `npx skills add` не потрібен.
+> 3 community-скіли (`fastapi-python`, `pytest-coverage`, `ruff-recursive-fix`) поставляються
+> **вбудовано** в `.claude/skills/` — `npx skills add` не потрібен.
 
 ### Хто за що відповідає
 
@@ -98,7 +97,7 @@ uvicorn app.main:app --reload
 
 ### Передумови
 
-1. **Python 3.11+** (Windows).
+1. **Python 3.11+** (macOS — рекомендується через `uv`).
 2. **Node.js** (для `npx` — MCP-сервер `context7`).
 3. **context7 API-ключ** — отримати на https://context7.com/dashboard.
 4. **Секрети проєкту** — у `backend/.env` (див. розділ «Конфігурація» вище:
@@ -106,8 +105,15 @@ uvicorn app.main:app --reload
 
 ### Налаштування Claude Code
 
-```powershell
+```bash
 # 1. Ключ context7 (перезапусти Claude Code після цього)
+export CONTEXT7_API_KEY=ctx7sk-...
+# Або постійно в ~/.zshrc:
+echo 'export CONTEXT7_API_KEY=ctx7sk-...' >> ~/.zshrc
+```
+
+Колеги на Windows можуть використати:
+```powershell
 [Environment]::SetEnvironmentVariable("CONTEXT7_API_KEY", "ctx7sk-...", "User")
 ```
 

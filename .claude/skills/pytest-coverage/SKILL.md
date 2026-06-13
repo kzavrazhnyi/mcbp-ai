@@ -1,6 +1,6 @@
 ---
 name: pytest-coverage
-description: "Run pytest tests with coverage, discover lines missing coverage, and increase coverage to 100%.\n\nУкраїнською: покриття тестами, pytest coverage, знайти незакриті рядки коду, підняти покриття до 100%, cov_annotate звіт."
+description: "Run pytest with coverage, discover lines missing coverage, and raise coverage to 100% iteratively. Trigger — EN: pytest coverage, coverage report, missing lines, 100% coverage, cov_annotate. Trigger — UA: покриття тестами, pytest coverage, знайти незакриті рядки коду, підняти покриття до 100%, cov_annotate звіт."
 ---
 
 The goal is for the tests to cover all lines of code.

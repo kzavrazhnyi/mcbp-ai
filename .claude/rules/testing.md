@@ -100,8 +100,8 @@ The project targets at minimum these 7 tests:
 
 ## Running Tests
 
-```powershell
-# from project root on Windows
+```bash
+# from project root
 python -m pytest backend/tests/ -v
 
 # single file

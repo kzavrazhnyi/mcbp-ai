@@ -3,6 +3,9 @@
 @.claude/rules/shell-workflow.md
 @.claude/rules/git-safety.md
 @.claude/rules/surgical-changes.md
+@.claude/rules/pipeline-selector.md
+@.claude/rules/task-quality-modes.md
+@.claude/rules/canonical-refs.md
 @.claude/rules/code-style.md
 @.claude/rules/architecture.md
 @.claude/rules/testing.md
@@ -83,6 +86,10 @@ BAS_CODE_MAP.md        — 1C method name → purpose map
 | Code review before commit/PR | `reviewer` | read-only audit |
 
 Max 2 parallel agents (pro-20 budget). Quality gate (`reviewer`) runs serially.
+
+## 1C Tool Contract
+
+Ground truth for the 6 data-fetch tools (endpoints, auth, retry, shapes): see `.claude/refs/onec-tool-contract.md`.
 
 ## MCP Stack
 

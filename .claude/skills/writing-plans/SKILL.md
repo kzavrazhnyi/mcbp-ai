@@ -79,7 +79,7 @@ Expected: FAIL
 
 - [ ] **Step 5: Lint and commit**
 
-```powershell
+```bash
 python -m pytest backend/tests/ -v
 ruff check --no-fix backend/app/
 git add <files>
