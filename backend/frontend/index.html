@@ -13,6 +13,11 @@
         <span class="dot" id="health-dot" title="стан backend"></span>
         <span class="title">MCBP&nbsp;AI</span>
       </div>
+      <nav class="tab-nav">
+        <button class="tab active" data-tab="chat">Чат</button>
+        <button class="tab" data-tab="data">Дані</button>
+      </nav>
+      <button id="new-chat-btn" title="Новий чат">+ Новий чат</button>
       <div class="meta" id="health-meta">перевірка…</div>
     </header>
 
@@ -33,6 +38,36 @@
       <button type="submit" id="send" title="Надіслати">➤</button>
     </form>
   </div>
+
+  <section class="data-browser hidden" id="data-browser">
+    <div class="db-bar">
+      <select id="db-kind">
+        <option value="">— вид метаданих —</option>
+        <option value="Catalogs">Довідники</option>
+        <option value="Documents">Документи</option>
+        <option value="AccumulationRegisters">Регістри накопичення</option>
+        <option value="InformationRegisters">Регістри відомостей</option>
+      </select>
+      <span id="db-search-wrap" class="hidden">
+        <input id="db-search" type="text" placeholder="Пошук…" />
+      </span>
+      <span id="db-date-wrap" class="hidden">
+        <input id="db-from" type="date" />
+        <span class="db-sep">—</span>
+        <input id="db-to" type="date" />
+      </span>
+      <button id="db-load-btn" class="db-btn" disabled>Завантажити</button>
+    </div>
+    <div id="db-types-row" class="db-types-row hidden"></div>
+    <div id="db-content" class="db-content"></div>
+    <div id="db-detail" class="db-detail hidden">
+      <div class="db-detail-header">
+        <span id="db-detail-title"></span>
+        <button id="db-detail-close" class="db-btn-icon">✕</button>
+      </div>
+      <div id="db-detail-body" class="db-detail-body"></div>
+    </div>
+  </section>
 
   <script src="./app.js"></script>
 </body>

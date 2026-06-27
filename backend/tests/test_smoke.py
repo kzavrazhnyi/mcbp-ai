@@ -84,6 +84,30 @@ def test_legacy_error_classification():
     assert isinstance(_classify_legacy_error("Parameter type not found!"), ParameterError)
 
 
+def test_metadata_all():
+    with TestClient(app) as c:
+        r = c.get("/ai/v1/metadata/all")
+        assert r.status_code == 200
+        j = r.json()
+        assert "catalogs" in j
+
+
+def test_get_object():
+    with TestClient(app) as c:
+        r = c.get("/ai/v1/object/Catalogs/Контрагенты/e3f1d9b6-0001-11ef-a850-cc52afc9fc6f")
+        assert r.status_code == 200
+        j = r.json()
+        assert "data" in j
+
+
+def test_metadata_describe():
+    with TestClient(app) as c:
+        r = c.get("/ai/v1/metadata/Catalogs/Контрагенты")
+        assert r.status_code == 200
+        j = r.json()
+        assert "attributes" in j
+
+
 def test_system_prompt_uses_bas_internal_names():
     # Промпт скеровує модель на ВНУТРІШНІ імена метаданих BAS (успадковані рос.), а не укр. синоніми.
     assert "BAS" in SYSTEM_PROMPT

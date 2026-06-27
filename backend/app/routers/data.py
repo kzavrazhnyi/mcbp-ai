@@ -6,9 +6,15 @@
 
 from __future__ import annotations
 
+import uuid
+from typing import Literal
+
 from fastapi import APIRouter, Body, Query, Request
 
 from app.core.deps import get_mcbp
+
+MetadataKind = Literal["all", "Catalogs", "Documents", "AccumulationRegisters", "InformationRegisters"]
+ObjectKind = Literal["Catalogs", "Documents", "AccumulationRegisters", "InformationRegisters"]
 
 router = APIRouter()
 
@@ -58,3 +64,18 @@ async def create_object(
 async def register_balance(type_: str, request: Request) -> dict:
     filters = dict(request.query_params)
     return await get_mcbp().register_balance(type_, filters)
+
+
+@router.get("/v1/metadata/{kind}/{type_}")
+async def describe_metadata(kind: MetadataKind, type_: str) -> dict:
+    return await get_mcbp().describe_metadata(kind, type_)
+
+
+@router.get("/v1/metadata/{kind}")
+async def list_metadata(kind: MetadataKind) -> dict:
+    return await get_mcbp().list_metadata(kind)
+
+
+@router.get("/v1/object/{kind}/{type_}/{object_id}")
+async def get_object(kind: ObjectKind, type_: str, object_id: uuid.UUID) -> dict:
+    return await get_mcbp().get_object(kind, type_, str(object_id))

@@ -105,6 +105,7 @@ class Orchestrator:
         self._s = settings
         self._mcbp = mcbp
         self._llm = llm
+        self._history: dict[str, list[dict]] = {}  # conversation_id -> messages (без system)
 
     async def _execute_tool(self, name: str, arguments: dict[str, Any]) -> Any:
         tool = TOOLS.get(name)
@@ -118,10 +119,24 @@ class Orchestrator:
             return {"error": {"code": "BAD_ARGUMENTS",
                               "message": f"Tool {name} missing/invalid argument: {e}"}}
 
-    async def run(self, message: str, allowed_tools: list[str] | None = None) -> dict:
+    def _load_history(self, conversation_id: str) -> list[dict[str, Any]]:
+        return list(self._history.get(conversation_id, []))
+
+    def _save_history(self, conversation_id: str, messages: list[dict[str, Any]]) -> None:
+        if len(messages) > 100:
+            messages = messages[-100:]
+        self._history[conversation_id] = messages
+
+    async def run(
+        self,
+        message: str,
+        conversation_id: str,
+        allowed_tools: list[str] | None = None,
+    ) -> dict:
         """Non-streaming: returns final answer + the tool calls that were made."""
-        trace.info("QUERY: %s | allowed_tools=%s", message, allowed_tools or "all")
-        messages: list[dict[str, Any]] = [{"role": "user", "content": message}]
+        trace.info("QUERY: %s | conv=%s | allowed_tools=%s", message, conversation_id, allowed_tools or "all")
+        messages: list[dict[str, Any]] = self._load_history(conversation_id)
+        messages.append({"role": "user", "content": message})
         defs = tool_defs(allowed_tools)
         system = system_prompt_with_context()
         made: list[dict] = []
@@ -132,7 +147,8 @@ class Orchestrator:
 
             if not step.wants_tools:
                 trace.info("ANSWER (%d chars): %s", len(step.text or ""), step.text)
-                return {"answer": step.text, "tool_calls": made}
+                self._save_history(conversation_id, messages)
+                return {"answer": step.text, "tool_calls": made, "conversation_id": conversation_id}
 
             for call in step.tool_calls:
                 trace.info("[it %d] tool_call %s args=%s",
@@ -145,12 +161,19 @@ class Orchestrator:
                 messages.append(self._llm.tool_result_message(call, result))
 
         trace.warning("Перевищено ліміт кроків (%d)", self._s.llm_max_tool_iterations)
-        return {"answer": "Перевищено ліміт кроків обробки.", "tool_calls": made}
+        self._save_history(conversation_id, messages)
+        return {"answer": "Перевищено ліміт кроків обробки.", "tool_calls": made, "conversation_id": conversation_id}
 
-    async def stream(self, message: str, allowed_tools: list[str] | None = None) -> AsyncIterator[dict]:
+    async def stream(
+        self,
+        message: str,
+        conversation_id: str,
+        allowed_tools: list[str] | None = None,
+    ) -> AsyncIterator[dict]:
         """Streaming variant: yields SSE-friendly events (tool steps + final)."""
-        trace.info("QUERY (stream): %s | allowed_tools=%s", message, allowed_tools or "all")
-        messages: list[dict[str, Any]] = [{"role": "user", "content": message}]
+        trace.info("QUERY (stream): %s | conv=%s | allowed_tools=%s", message, conversation_id, allowed_tools or "all")
+        messages: list[dict[str, Any]] = self._load_history(conversation_id)
+        messages.append({"role": "user", "content": message})
         defs = tool_defs(allowed_tools)
         system = system_prompt_with_context()
 
@@ -160,6 +183,7 @@ class Orchestrator:
 
             if not step.wants_tools:
                 trace.info("ANSWER (%d chars): %s", len(step.text or ""), step.text)
+                self._save_history(conversation_id, messages)
                 yield {"type": "answer", "text": step.text}
                 return
 
@@ -175,4 +199,5 @@ class Orchestrator:
                 messages.append(self._llm.tool_result_message(call, result))
 
         trace.warning("Перевищено ліміт кроків (%d)", self._s.llm_max_tool_iterations)
+        self._save_history(conversation_id, messages)
         yield {"type": "answer", "text": "Перевищено ліміт кроків обробки."}
