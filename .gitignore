@@ -1,7 +1,7 @@
 # Existing project entries (preserved)
-# Claude local settings (never commit)
-.claude/settings.local.json
-.claude_dev/settings.local.json
+# Claude Code — вся конфігурація локальна, не потрапляє в репо
+.claude/
+.claude_dev/
 
 # Python
 backend/.venv/
@@ -46,9 +46,3 @@ htmlcov/
 # Ruff
 .ruff_cache/
 
-# Claude Code configuration (local, not tracked)
-# Shipped by the claude_setup generator. Per-developer Claude tooling stays out
-# of the shared history so two configs never conflict in one repo.
-# If your team decides to track any of these in git, delete its line below.
-
-# end Claude Code configuration
