@@ -116,7 +116,7 @@ class MCBPClient:
 
     # --- High-level methods (the surface the rest of the app uses) ---
     async def health(self) -> dict:
-        await self._request("GET", "/mcbp_ai/metadata/list")
+        await self._request("GET", "/ai/v1/health")
         return {"status": "ok", "service": "MCBP_AI", "key": True}
 
     async def list_catalog(self, type_: str, cursor: str | None, limit: int, q: str | None,
