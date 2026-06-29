@@ -10,25 +10,38 @@ const input = document.getElementById("input");
 const sendBtn = document.getElementById("send");
 const healthDot = document.getElementById("health-dot");
 const healthMeta = document.getElementById("health-meta");
+const checkBtn = document.getElementById("check-btn");
+const checkToast = document.getElementById("check-toast");
 
 let busy = false;
 let conversationId = null;
 
 // ── health ───────────────────────────────────────────────────────────────
-async function checkHealth() {
+async function checkHealth(showToast = false) {
   try {
     const r = await fetch(`${API}/health`);
     const j = await r.json();
     const d = j.data || {};
     const up = d.upstream || {};
-    const onec = d.mock_1c ? "mock" : (up.status === "ok" ? "BAS ✓" : "BAS ✗");
+    const onecOk = d.mock_1c || up.status === "ok";
+    const onecLabel = d.mock_1c ? "1С: mock" : (onecOk ? "1С: ✓" : "1С: ✗");
+    const llmLabel = `LLM: ${d.llm_provider || "?"}`;
     healthDot.classList.toggle("ok", r.ok);
     healthDot.classList.toggle("err", !r.ok);
-    healthMeta.textContent = `LLM: ${d.llm_provider} · ${onec}`;
+    healthMeta.textContent = `${llmLabel} · ${onecLabel}`;
+    if (showToast) showCheckToast(r.ok && onecOk, `${llmLabel} · ${onecLabel}`);
   } catch (e) {
     healthDot.classList.add("err");
     healthMeta.textContent = "backend недоступний";
+    if (showToast) showCheckToast(false, "backend недоступний");
   }
+}
+
+function showCheckToast(ok, msg) {
+  checkToast.textContent = (ok ? "✓ " : "✗ ") + msg;
+  checkToast.className = "check-toast " + (ok ? "ok" : "err");
+  clearTimeout(checkToast._t);
+  checkToast._t = setTimeout(() => checkToast.classList.add("hidden"), 4000);
 }
 
 // ── DOM helpers ────────────────────────────────────────────────────────────
@@ -224,6 +237,8 @@ document.getElementById("new-chat-btn").addEventListener("click", () => {
   chat.appendChild(empty);
   input.focus();
 });
+
+checkBtn.addEventListener("click", () => checkHealth(true));
 
 checkHealth();
 setInterval(checkHealth, 30000);

@@ -51,6 +51,35 @@ body {
 .dot.err { background: var(--err); }
 .meta { color: var(--muted); font-size: .82rem; }
 
+#check-btn {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: .82rem;
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+}
+#check-btn:hover { color: var(--text); border-color: var(--accent); }
+
+.check-toast {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: .88rem;
+  font-weight: 500;
+  z-index: 999;
+  pointer-events: none;
+  transition: opacity .3s;
+}
+.check-toast.ok  { background: #1a3d24; color: var(--ok); border: 1px solid var(--ok); }
+.check-toast.err { background: #3d1a1a; color: var(--err); border: 1px solid var(--err); }
+.check-toast.hidden { display: none; }
+
 /* ── chat ── */
 .chat {
   flex: 1;
