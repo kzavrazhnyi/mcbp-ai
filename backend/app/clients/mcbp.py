@@ -71,7 +71,7 @@ class MCBPClient:
             f"{self._s.onec_user}:{self._s.onec_password}".encode()
         ).decode()
         self._client = httpx.AsyncClient(
-            base_url=self._s.onec_base_url,
+            base_url=self._s.onec_base_url.rstrip("/") + "/",
             headers={"Authorization": f"Basic {auth}", "Content-Type": "application/json"},
             timeout=self._s.onec_timeout_s,
             limits=httpx.Limits(max_connections=self._s.onec_pool_max),
@@ -82,6 +82,7 @@ class MCBPClient:
             await self._client.aclose()
 
     async def _request(self, method: str, path: str, **kw) -> Any:
+        path = path.lstrip("/")  # httpx base_url requires relative paths
         brief = _kw_brief(kw)
         if self._mock:
             log.info("[mock] %s %s %s", method, path, brief)
